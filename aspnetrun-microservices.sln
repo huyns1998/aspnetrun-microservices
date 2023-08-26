@@ -7,7 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{35
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7886B09A-2B4D-4F36-A28E-0DE31A88CAED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.API", "Catalog.API\Catalog.API.csproj", "{CC98C0F9-5A81-4A90-BD66-ADF2708D4CF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalog.API", "Catalog.API\Catalog.API.csproj", "{CC98C0F9-5A81-4A90-BD66-ADF2708D4CF1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{302999DC-8335-437B-BE5E-615B6170FB3F}"
+	ProjectSection(SolutionItems) = preProject
+		catalog-depl.yaml = catalog-depl.yaml
+		ingress-srv.yaml = ingress-srv.yaml
+		local-pvc.yaml = local-pvc.yaml
+		mssql-catalog-depl.yaml = mssql-catalog-depl.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

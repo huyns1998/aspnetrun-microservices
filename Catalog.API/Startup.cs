@@ -1,4 +1,6 @@
+using Catalog.API.BL;
 using Catalog.API.Data;
+using Catalog.API.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +32,14 @@ namespace Catalog.API
             services.AddDbContext<CatalogDbContext>(opt =>
                     opt.UseSqlServer(Configuration.GetConnectionString("CatalogConn")));
 
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            services.AddScoped<IProductService, ProductService>();
+
             services.AddControllers();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });

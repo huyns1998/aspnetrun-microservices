@@ -17,18 +17,10 @@ spec:
                 name: catalog-clusterip-srv
                 port:  
                   number: 80
-
-#apiVersion: networking.k8s.io/v1beta1
-#kind: Ingress
-#metadata:
-#  name: ingress-srv
-#spec:
-#  rules:
-#    - host: acme.com  # Replace with your domain
-#      http:
-#        paths:
-#          - path: /api/v1/catalog
-#            pathType: Prefix
-#            backend:
-#              serviceName: catalog-clusterip-srv  # Replace with your service name`
-#              servicePort: 80
+          - path: /api/v1/basket
+            pathType: Prefix
+            backend:
+              service:
+                name: basket-clusterip-srv
+                port:  
+                  number: 80

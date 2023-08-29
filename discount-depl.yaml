@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discount-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discount-api
+  template:
+    metadata:
+      labels:
+        app: discount-api
+    spec:
+      containers:
+        - name: discount-api
+          image: discount.api:v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discount-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: discount-api
+  ports:
+  - name: discount-api
+    protocol: TCP
+    port: 80
+    targetPort: 80

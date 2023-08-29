@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{302999DC-833
 	ProjectSection(SolutionItems) = preProject
 		basket-depl.yaml = basket-depl.yaml
 		catalog-depl.yaml = catalog-depl.yaml
+		discount-depl.yaml = discount-depl.yaml
 		ingress-srv.yaml = ingress-srv.yaml
 		local-pvc.yaml = local-pvc.yaml
 		mssql-catalog-depl.yaml = mssql-catalog-depl.yaml
@@ -21,6 +22,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basket", "Basket", "{D31CEE1A-9F1B-4A40-9960-3010087CBE81}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basket.API", "Basket.API\Basket.API.csproj", "{F8DF9C91-A336-4426-8BCD-1000289736CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discount", "Discount", "{674D7556-DEC6-407B-A598-6EB9EE8A64E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discount.API", "Discount.API\Discount.API.csproj", "{8B1C8C01-22DF-474D-8E56-F744568D8752}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +41,10 @@ Global
 		{F8DF9C91-A336-4426-8BCD-1000289736CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8DF9C91-A336-4426-8BCD-1000289736CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8DF9C91-A336-4426-8BCD-1000289736CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B1C8C01-22DF-474D-8E56-F744568D8752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B1C8C01-22DF-474D-8E56-F744568D8752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B1C8C01-22DF-474D-8E56-F744568D8752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B1C8C01-22DF-474D-8E56-F744568D8752}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +54,8 @@ Global
 		{CC98C0F9-5A81-4A90-BD66-ADF2708D4CF1} = {7886B09A-2B4D-4F36-A28E-0DE31A88CAED}
 		{D31CEE1A-9F1B-4A40-9960-3010087CBE81} = {353907A7-8EAC-4869-ACA8-42F91801F20D}
 		{F8DF9C91-A336-4426-8BCD-1000289736CF} = {D31CEE1A-9F1B-4A40-9960-3010087CBE81}
+		{674D7556-DEC6-407B-A598-6EB9EE8A64E0} = {353907A7-8EAC-4869-ACA8-42F91801F20D}
+		{8B1C8C01-22DF-474D-8E56-F744568D8752} = {674D7556-DEC6-407B-A598-6EB9EE8A64E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FDF1F313-0C84-44A0-BF79-89E603533895}

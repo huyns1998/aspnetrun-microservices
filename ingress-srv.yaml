@@ -24,3 +24,10 @@ spec:
                 name: basket-clusterip-srv
                 port:  
                   number: 80
+          - path: /api/v1/discount
+            pathType: Prefix
+            backend:
+              service:
+                name: discount-clusterip-srv
+                port:  
+                  number: 80

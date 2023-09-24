@@ -1,6 +1,8 @@
 using Basket.API.BL;
 using Basket.API.Data;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories;
+using Discount.Grpc.Protos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,11 @@ namespace Basket.API
 
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();  
             services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();  
-            services.AddScoped<IBasketService, BasketService>();  
+            services.AddScoped<IBasketService, BasketService>();
+
+            services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>
+                (o => o.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
+            services.AddScoped<DiscountGrpcService>();
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

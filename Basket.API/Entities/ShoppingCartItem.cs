@@ -13,7 +13,6 @@ namespace Basket.API.Entities
         public string Color { get; set; }
         [Required]
         public decimal Price { get; set; }
-        public int ProductId { get; set; }
         public string ProductName { get; set; }
         [Required]
         public int ShoppingCartId { get; set; }

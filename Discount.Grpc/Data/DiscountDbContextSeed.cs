@@ -31,42 +31,42 @@ namespace Discount.Grpc.Data
             }
 
 
-            //if (!context.Coupons.Any())
-            //{
-            //    Console.WriteLine("--> Seeding Data...");
+            if (!context.Coupons.Any())
+            {
+                Console.WriteLine("--> Seeding Data...");
 
-            //    var coupons = GetPreconfiguredCoupons();
+                var coupons = GetPreconfiguredCoupons();
 
-            //    foreach (var item in coupons)
-            //    {
-            //        context.Coupons.Add(item);
-            //    }
+                foreach (var item in coupons)
+                {
+                    context.Coupons.Add(item);
+                }
 
-            //    context.SaveChanges();
-            //}
-            //else
-            //{
-            //    Console.WriteLine("--> We already have data");
-            //}
+                context.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("--> We already have data");
+            }
         }
 
-        //private static IEnumerable<Coupon> GetPreconfiguredCoupons()
-        //{
-        //    return new List<Coupon>()
-        //    {
-        //        new Coupon()
-        //        {
-        //            ProductName = "IPhone X",
-        //            Description = "IPhone Discount",
-        //            Amount= 150,
-        //        },
-        //        new Coupon()
-        //        {
-        //            ProductName = "Samsung 10",
-        //            Description = "IPhone Discount",
-        //            Amount= 100,
-        //        }
-        //    };
-        //}
+        private static IEnumerable<Coupon> GetPreconfiguredCoupons()
+        {
+            return new List<Coupon>()
+            {
+                new Coupon()
+                {
+                    ProductName = "IPhone X",
+                    Description = "IPhone Discount",
+                    Amount= 150,
+                },
+                new Coupon()
+                {
+                    ProductName = "Samsung 10",
+                    Description = "IPhone Discount",
+                    Amount= 100,
+                }
+            };
+        }
     }
 }

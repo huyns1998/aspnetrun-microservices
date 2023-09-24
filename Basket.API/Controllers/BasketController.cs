@@ -2,6 +2,7 @@
 using Basket.API.BL;
 using Basket.API.Dtos;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,12 +17,14 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketService _basketService;
         private readonly IMapper _mapper;
+        private readonly DiscountGrpcService _discountGrpcService;
         //private readonly ILogger<CatalogController> _logger;
 
-        public BasketController(IBasketService basketService/*, ILogger<CatalogController> logger*/, IMapper mapper)
+        public BasketController(IBasketService basketService/*, ILogger<CatalogController> logger*/, IMapper mapper, DiscountGrpcService discountGrpcService)
         {
             _basketService = basketService;
             _mapper = mapper;
+            _discountGrpcService = discountGrpcService;
             //_logger = logger;
         }
 
@@ -42,7 +45,7 @@ namespace Basket.API.Controllers
             }
 
             return Ok(_mapper.Map<ShoppingCartReadDto>(basket));
-        }
+        } 
 
         [HttpPut]
         public async Task<ActionResult<ShoppingCartUpdateDto>> Put([FromBody] ShoppingCartUpdateDto cartUpdateDto)
@@ -58,8 +61,22 @@ namespace Basket.API.Controllers
 
             await _basketService.DeleteAllShoppingCartItem(cart.Id);
 
-            _mapper.Map(cartUpdateDto, cart); 
-           var result =  await _basketService.UpdateBasket(cart);
+            _mapper.Map(cartUpdateDto, cart);
+
+            foreach(var item in cart.Items)
+            {
+                try
+                {
+                    var coupon = await _discountGrpcService.GetDiscount(item.ProductName);
+                    item.Price -= coupon.Amount;
+                }
+                catch
+                {
+                    Console.WriteLine($"--> Not found discount for {item.ProductName}");
+                }
+            }
+
+            var result = await _basketService.UpdateBasket(cart);
 
             return Ok(_mapper.Map<ShoppingCartReadDto>(result));
         }

@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: discount-api
+      app: discount-grpc
   template:
     metadata:
       labels:
-        app: discount-api
+        app: discount-grpc
     spec:
       containers:
-        - name: discount-api
-          image: discount.api:v1
+        - name: discount-grpc
+          image: discount.grpc:v1
 ---
 apiVersion: v1
 kind: Service
@@ -23,9 +23,13 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: discount-api
+    app: discount-grpc
   ports:
-  - name: discount-api
+  - name: discount-grpcservice
     protocol: TCP
     port: 80
     targetPort: 80
+  - name: discount-grpc
+    protocol: TCP
+    port: 666
+    targetPort: 666

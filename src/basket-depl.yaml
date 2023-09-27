@@ -1,31 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ordering-depl
+  name: basket-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ordering-api
+      app: basket-api
   template:
     metadata:
       labels:
-        app: ordering-api
+        app: basket-api
     spec:
       containers:
-        - name: ordering-api
-          image: ordering.api:v1
+        - name: basket-api
+          image: basket.api:v1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ordering-clusterip-srv
+  name: basket-clusterip-srv
 spec:
   type: ClusterIP
   selector:
-    app: ordering-api
+    app: basket-api
   ports:
-  - name: ordering-api
+  - name: basket-api
     protocol: TCP
     port: 80
     targetPort: 80

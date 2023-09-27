@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{302999DC-833
 		ingress-srv.yaml = ingress-srv.yaml
 		local-pvc.yaml = local-pvc.yaml
 		mssql-catalog-depl.yaml = mssql-catalog-depl.yaml
+		ordering-depl.yaml = ordering-depl.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Basket", "Basket", "{D31CEE1A-9F1B-4A40-9960-3010087CBE81}"

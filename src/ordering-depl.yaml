@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-api
+  template:
+    metadata:
+      labels:
+        app: ordering-api
+    spec:
+      containers:
+        - name: ordering-api
+          image: ordering.api:v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: ordering-api
+  ports:
+  - name: ordering-api
+    protocol: TCP
+    port: 80
+    targetPort: 80

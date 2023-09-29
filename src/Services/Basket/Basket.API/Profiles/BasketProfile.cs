@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Basket.API.Dtos;
 using Basket.API.Entities;
+using EventBus.Messages.Events;
 
 namespace Basket.API.Profiles
 {
@@ -18,6 +19,7 @@ namespace Basket.API.Profiles
                  .ForAllOtherMembers(opt => opt.Ignore());
 
             CreateMap<ShoppingCartItemUpdateDto, ShoppingCartItem>();
+            CreateMap<BasketCheckoutDto, BasketCheckoutEvent>();
         }  
     }
 }

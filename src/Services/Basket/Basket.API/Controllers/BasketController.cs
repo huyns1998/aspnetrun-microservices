@@ -3,6 +3,8 @@ using Basket.API.BL;
 using Basket.API.Dtos;
 using Basket.API.Entities;
 using Basket.API.GrpcServices;
+using EventBus.Messages.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,14 +20,14 @@ namespace Basket.API.Controllers
         private readonly IBasketService _basketService;
         private readonly IMapper _mapper;
         private readonly DiscountGrpcService _discountGrpcService;
-        //private readonly ILogger<CatalogController> _logger;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public BasketController(IBasketService basketService/*, ILogger<CatalogController> logger*/, IMapper mapper, DiscountGrpcService discountGrpcService)
+        public BasketController(IBasketService basketService, IMapper mapper, DiscountGrpcService discountGrpcService, IPublishEndpoint publishEndpoint)
         {
             _basketService = basketService;
             _mapper = mapper;
             _discountGrpcService = discountGrpcService;
-            //_logger = logger;
+            _publishEndpoint = publishEndpoint; 
         }
 
         [HttpGet("{userName}")]
@@ -33,19 +35,19 @@ namespace Basket.API.Controllers
         {
             Console.WriteLine("--> Get basket by userName");
             var basket = await _basketService.GetBasket(userName);
-            if(basket == null) 
+            if (basket == null)
             {
                 ShoppingCartCreateDto cartCreateDto = new ShoppingCartCreateDto()
                 {
                     UserName = userName
                 };
-                var cart = _mapper.Map<ShoppingCart>(cartCreateDto);    
+                var cart = _mapper.Map<ShoppingCart>(cartCreateDto);
                 var result = await _basketService.AddBasket(cart);
-               return Created($"Create basket Id {result.Id}", _mapper.Map<ShoppingCartReadDto>(result));
+                return Created($"Create basket Id {result.Id}", _mapper.Map<ShoppingCartReadDto>(result));
             }
 
             return Ok(_mapper.Map<ShoppingCartReadDto>(basket));
-        } 
+        }
 
         [HttpPut]
         public async Task<ActionResult<ShoppingCartUpdateDto>> Put([FromBody] ShoppingCartUpdateDto cartUpdateDto)
@@ -63,7 +65,7 @@ namespace Basket.API.Controllers
 
             _mapper.Map(cartUpdateDto, cart);
 
-            foreach(var item in cart.Items)
+            foreach (var item in cart.Items)
             {
                 try
                 {
@@ -93,6 +95,25 @@ namespace Basket.API.Controllers
 
             var result = await _basketService.DeleteBasket(basket.Id);
             return Ok(result);
+        }
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckoutDto basketCheckoutDto)
+        {
+            ShoppingCart basket = await _basketService.GetBasket(basketCheckoutDto.UserName);
+            if (basket == null) 
+            {
+                return BadRequest();    
+            }
+
+            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckoutDto);
+            eventMessage.TotalPrice = basket.TotalPrice;
+
+            await _publishEndpoint.Publish(eventMessage);
+            await _basketService.DeleteBasket(basket.Id);
+
+            return Accepted();  
         }
     }
 }

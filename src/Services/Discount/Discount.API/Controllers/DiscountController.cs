@@ -28,8 +28,17 @@ namespace Discount.API.Controllers
         {
             Console.WriteLine("--> Get all discount");
 
-            var products = await _couponService.GetAll();
-            return Ok(_mapper.Map<IEnumerable<CouponReadDto>>(products));
+            var coupons = await _couponService.GetAll();
+            return Ok(_mapper.Map<IEnumerable<CouponReadDto>>(coupons));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<CouponReadDto>>> Get(int id)
+        {
+            Console.WriteLine("--> Get discount by id");
+
+            var coupon = await _couponService.GetById(id);
+            return Ok(_mapper.Map<CouponReadDto>(coupon));
         }
 
         [HttpPost]

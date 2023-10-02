@@ -1,0 +1,91 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/catalog",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/catalog",
+      "ServiceName": "catalog-clusterip-srv",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/catalog/{id}",
+      "DownstreamScheme": "http",
+      "ServiceName": "catalog-clusterip-srv",
+      "UpstreamPathTemplate": "/catalog/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/catalog/{category}/category",
+      "DownstreamScheme": "http",
+      "ServiceName": "catalog-clusterip-srv",
+      "UpstreamPathTemplate": "/catalog/{category}/category",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    //Basket API
+    {
+      "DownstreamPathTemplate": "/api/v1/basket/{userName}",
+      "DownstreamScheme": "http",
+      "ServiceName": "basket-clusterip-srv",
+      "UpstreamPathTemplate": "/basket/{userName}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/basket",
+      "DownstreamScheme": "http",
+      "ServiceName": "basket-clusterip-srv",
+      "UpstreamPathTemplate": "/basket",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/basket/checkout",
+      "DownstreamScheme": "http",
+      "ServiceName": "basket-clusterip-srv",
+      "UpstreamPathTemplate": "/basket/checkout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "3s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
+    },
+    //Discount API
+    {
+      "DownstreamPathTemplate": "/api/v1/discount/{productName}",
+      "DownstreamScheme": "http",
+      "ServiceName": "discount-clusterip-srv",
+      "UpstreamPathTemplate": "/discount/{productName}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/discount",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "5002"
+        }
+      ],
+      "UpstreamPathTemplate": "/discount",
+      "UpstreamHttpMethod": [ "PUT", "POST" ]
+    },
+    //Order API
+    {
+      "DownstreamPathTemplate": "/api/v1/order/{userName}",
+      "DownstreamScheme": "http",
+     "ServiceName": "ordering-clusterip-srv",
+      "UpstreamPathTemplate": "/order/{userName}",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "acme.com",
+      "Port": 80,
+      "Token": "txpc696iUhbVoudg164r93CxDTrKRVWG",
+      "Namespace": "default",
+      "Type": "KubernetesServiceDiscoveryProvider"
+    }
+  }
+}

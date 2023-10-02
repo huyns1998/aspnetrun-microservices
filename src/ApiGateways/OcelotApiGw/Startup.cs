@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Kubernetes;
 
 namespace OcelotApiGw
 {
@@ -16,6 +17,7 @@ namespace OcelotApiGw
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOcelot()
+                .AddKubernetes()
                 .AddCacheManager(settings => settings.WithDictionaryHandle());
         }
 

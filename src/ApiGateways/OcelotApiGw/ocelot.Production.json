@@ -61,12 +61,7 @@
     {
       "DownstreamPathTemplate": "/api/v1/discount",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": "5002"
-        }
-      ],
+      "ServiceName": "discount-clusterip-srv",
       "UpstreamPathTemplate": "/discount",
       "UpstreamHttpMethod": [ "PUT", "POST" ]
     },

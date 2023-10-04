@@ -38,17 +38,24 @@ spec:
           #      name: ordering-clusterip-srv
           #      port:  
           #        number: 80
+          #- path: /
+          #  pathType: Prefix
+          #  backend:
+          #    service:
+          #      name: ocelotapigw-clusterip-srv
+          #      port:  
+          #        number: 80
+          #- path: /api/shopping
+          #  pathType: Prefix
+          #  backend:
+          #    service:
+          #      name: aggregator-clusterip-srv
+          #      port:  
+          #        number: 80
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: ocelotapigw-clusterip-srv
-                port:  
-                  number: 80
-          - path: /api/shopping
-            pathType: Prefix
-            backend:
-              service:
-                name: aggregator-clusterip-srv
+                name: webapp-clusterip-srv
                 port:  
                   number: 80

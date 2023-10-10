@@ -43,5 +43,10 @@ namespace Catalog.API.BL
         {
             return await _productRepository.Delete(id);   
         }
+
+        public async Task<Product> GetByProductName(string productName)
+        {
+            return await _productRepository.GetSingleByCondition(x => x.Name.Equals(productName));  
+        }
     }
 }

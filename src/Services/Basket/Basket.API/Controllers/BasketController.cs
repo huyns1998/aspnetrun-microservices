@@ -7,8 +7,11 @@ using EventBus.Messages.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Basket.API.Controllers
@@ -21,13 +24,15 @@ namespace Basket.API.Controllers
         private readonly IMapper _mapper;
         private readonly DiscountGrpcService _discountGrpcService;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IConfiguration _configuration;
 
-        public BasketController(IBasketService basketService, IMapper mapper, DiscountGrpcService discountGrpcService, IPublishEndpoint publishEndpoint)
+        public BasketController(IBasketService basketService, IMapper mapper, DiscountGrpcService discountGrpcService, IPublishEndpoint publishEndpoint, IConfiguration configuration)
         {
             _basketService = basketService;
             _mapper = mapper;
             _discountGrpcService = discountGrpcService;
             _publishEndpoint = publishEndpoint; 
+            _configuration = configuration; 
         }
 
         [HttpGet("{userName}")]
@@ -69,12 +74,34 @@ namespace Basket.API.Controllers
             {
                 try
                 {
-                    var coupon = await _discountGrpcService.GetDiscount(item.ProductName);
-                    item.Price -= coupon.Amount;
+                    HttpClient httpClient = new HttpClient();
+                    httpClient.BaseAddress = new Uri(_configuration["HttpSettings:CatalogUrl"]);
+                    HttpResponseMessage response = await httpClient.GetAsync($"api/v1/catalog/{item.ProductName}/price");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var taskPrice = response.Content.ReadAsStringAsync();
+                        var taskCoupon = _discountGrpcService.GetDiscount(item.ProductName);
+
+                        await Task.WhenAll(taskPrice, taskCoupon);
+
+                        decimal price = JsonSerializer.Deserialize<decimal>(taskPrice.Result, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                        Console.WriteLine($"Response content: {taskPrice.Result}");
+
+
+                        item.Price = price; 
+                        
+                        item.Price -= taskCoupon.Result.Amount;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error: {response.StatusCode}");
+                    }     
                 }
                 catch
                 {
-                    Console.WriteLine($"--> Not found discount for {item.ProductName}");
+                    Console.WriteLine($"--> Not found discount for {item.ProductName} or Product {item.ProductName}");
                 }
             }
 

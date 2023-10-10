@@ -1,0 +1,95 @@
+﻿@model CatalogModel
+@{
+    ViewData["Title"] = "ProductDetail";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Index">Product</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Image -->
+        <div class="col-12 col-lg-6">
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    <a href="" data-toggle="modal" data-target="#productModal">
+                        <img class="img-fluid" src="~/images/product/@Model.ImageFile.Replace('-','x')" />
+                        <p class="text-center">@Model.Name</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add to cart -->
+        <div class="col-12 col-lg-6 add_to_cart_block">
+            <div class="card bg-light mb-3">
+                <div class="card-body">
+                    @if(Model.Price != Model.DiscountPrice)
+                    {
+                        <p class="price">@Model.DiscountPrice $</p>
+                        <p class="price_discounted">@(Model.Price) $</p>
+                    }
+                    else
+                    {
+                        <p class="price">@Model.Price $</p>
+                    }
+                    
+                <form asp-action="Create" asp-controller="Cart" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Name" class="form-control" />
+                        <input type="hidden" asp-for="Price" class="form-control" />
+                        <input type="submit" value="Add to Cart" class="btn btn-success btn-block" />
+                </form>
+                    <div class="product_rassurance">
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><i class="fa fa-truck fa-2x"></i><br />Fast delivery</li>
+                            <li class="list-inline-item"><i class="fa fa-credit-card fa-2x"></i><br />Secure payment</li>
+                            <li class="list-inline-item"><i class="fa fa-phone fa-2x"></i><br />+33 1 22 54 65 60</li>
+                        </ul>
+                    </div>
+                    <div class="reviews_product p-3 mb-2 ">
+                        3 reviews
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        (4/5)
+                        <a class="pull-right" href="#reviews">View all reviews</a>
+                    </div>
+                    <div class="datasheet p-3 mb-2 bg-info text-white">
+                        <a href="" class="text-white"><i class="fa fa-file-text"></i> Download DataSheet</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Description -->
+        <div class="col-12">
+            <div class="card border-light mb-3">
+                <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Description</div>
+                <div class="card-body">
+                    <p class="card-text">
+                        @Model.Summary
+                    </p>
+                    <p class="card-text">
+                        @Model.Description
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

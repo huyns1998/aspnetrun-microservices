@@ -1,0 +1,108 @@
+﻿@model IEnumerable<CatalogModel>
+@{
+    ViewData["Title"] = "Product";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                    <li class="breadcrumb-item">Product</li>
+                    @*<li class="breadcrumb-item active" aria-current="page">@Model.SelectedCategory</li>*@
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-sm-3">
+            <div class="card bg-light mb-3">
+                @*<div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i></div>*@
+                <ul class="list-group category_block">
+
+                    <li class="list-group-item"><a class="font-weight-bold" id="category" asp-controller="Product" asp-action="Index">All Categories</a></li>
+                </ul>
+                <ul class="list-group category_block">
+
+                    @foreach (CatalogModel product in Model.GroupBy(item => item.Category).Select(group => group.First()))
+                    {
+                        <li class="list-group-item"><a id="category_@product.Category" asp-controller="Product" asp-route-category="@product.Category">@product.Category</a></li>
+                    }
+
+                </ul>
+            </div>
+
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase">Last product</div>
+                <div class="card-body">
+                    <img asp-append-version="true" class="img-fluid" src="~/images/product/@Model.LastOrDefault().ImageFile" />
+                    <h5 class="card-title">@Model.LastOrDefault().Name</h5>
+                    <p class="card-text">@Model.LastOrDefault().Summary</p>
+                    <p class="bloc_left_price">@Model.LastOrDefault().Price $</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col">
+            <div class="row">
+
+                @foreach (var product in Model)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <partial name="_ProductItemPartial" model="@product" />
+                    </div>
+                }
+
+                <div class="col-12">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts
+    {
+    <script type="text/javascript">
+        //$(document).ready(function () {
+
+        //    var path = window.location.href.replace(window.location.origin, "")
+        //    var a = document.createElement('a');
+        //    a.href = path;
+
+        //    // Access the query string
+        //    var queryString = a.search;
+
+        //    // Extract the "category" parameter
+        //    var category = new URLSearchParams(queryString).get("category");
+
+        //    // Decode the URL-encoded value to get "Smart Phone"
+        //    var decodedCategory = decodeURIComponent(category);
+
+        //    $("#category_Smart Phone").addClass('font-weight-bold');
+
+        //    debugger;
+        //});
+    </script>
+}
+
+

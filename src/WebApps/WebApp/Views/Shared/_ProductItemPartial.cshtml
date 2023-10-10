@@ -1,0 +1,43 @@
+﻿@model CatalogModel
+
+<div class="card">
+    <a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@Model.Id"><img asp-append-version="true" class="card-img-top" src="~/images/product/@Model.ImageFile" alt=""></a>
+    <div class="card-body">
+        <h4 class="card-title"><a asp-action="ProductDetail" asp-controller="Product" asp-route-id="@Model.Id" class="color-main">@Model.Name</a></h4>
+        <p class="card-text">@Model.Summary</p>
+        <div class="row">
+            <div class="col">
+                @if (Model.Price == Model.DiscountPrice)
+                {
+                    <p class="btn btn-danger btn-block">@Model.Price $</p>
+                }
+                else
+                {
+                    <p class="btn btn-danger btn-block">
+                        <span>@Model.DiscountPrice $</span><br />
+                        <span style="text-decoration: line-through">@Model.Price $</span>
+                    </p>
+                }
+            </div>
+            <div class="col">
+
+
+                  @*ProductId = product.Id,
+                    ProductName = product.Name,
+                    Price = product.Price,
+                    Quantity = 1,
+                    Color = "Black"
+*@
+
+                <form asp-action="Create" asp-controller="Cart" enctype="multipart/form-data" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Name" class="form-control" />
+                        <input type="hidden" asp-for="Price" class="form-control" />
+                        <input type="submit" value="Add to Cart" class="btn btn-success btn-block" />
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>

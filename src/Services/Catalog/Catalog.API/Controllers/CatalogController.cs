@@ -2,6 +2,7 @@
 using Catalog.API.BL;
 using Catalog.API.Dtos;
 using Catalog.API.Entities;
+using Catalog.API.GrpcServices;
 using Catalog.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,14 @@ namespace Catalog.API.Controllers
     {
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
+        private readonly DiscountGrpcService _discountGrpcService;
         //private readonly ILogger<CatalogController> _logger;
 
-        public CatalogController(IProductService productServive/*, ILogger<CatalogController> logger*/, IMapper mapper)
+        public CatalogController(IProductService productServive/*, ILogger<CatalogController> logger*/, IMapper mapper, DiscountGrpcService discountGrpcService)
         {
             _productService = productServive;
             _mapper = mapper;   
+            _discountGrpcService = discountGrpcService;
             //_logger = logger;
         }
 
@@ -34,11 +37,28 @@ namespace Catalog.API.Controllers
             Console.WriteLine("--> Get all products");
 
             var products = await _productService.GetAll();
-            return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(products));
+
+            var productReadDtos = _mapper.Map<IEnumerable<ProductReadDto>>(products);
+
+            foreach(var productReadDto in productReadDtos) 
+            {
+                try
+                {
+                    productReadDto.DiscountPrice = productReadDto.Price;
+                    var coupon = await _discountGrpcService.GetDiscount(productReadDto.Name);
+                    productReadDto.DiscountPrice -= coupon.Amount;
+                }
+                catch
+                {
+                    Console.WriteLine($"--> Not found discount for {productReadDto.Name}");
+                }
+            }
+
+            return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(productReadDtos));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> Get(int id)
+        public async Task<ActionResult<ProductReadDto>> Get(int id)
         {
             Console.WriteLine($"--> Get product by id {id}");
 
@@ -50,11 +70,40 @@ namespace Catalog.API.Controllers
                 return BadRequest();
             }
 
-            return Ok(_mapper.Map<ProductReadDto>(product));
+            var productReadDto = _mapper.Map<ProductReadDto>(product);
+
+            try
+            {
+                productReadDto.DiscountPrice = productReadDto.Price;
+                var coupon = await _discountGrpcService.GetDiscount(product.Name);
+                productReadDto.DiscountPrice -= coupon.Amount;
+            }
+            catch
+            {
+                Console.WriteLine($"--> Not found discount for {product.Name}");
+            }
+
+            return Ok(productReadDto);
+        }
+
+        [HttpGet("{productName}/price")]
+        public async Task<ActionResult<decimal>> Get(string productName)
+        {
+            Console.WriteLine($"--> Get product by name {productName}");
+
+            var product = await _productService.GetByProductName(productName);
+
+            if (product == null)
+            {
+                Console.WriteLine($"--> Notfound product with name {productName}");
+                return BadRequest();
+            }
+
+            return Ok(product.Price);
         }
 
         [HttpGet("{category}/category")]
-        public async Task<ActionResult<Product>> Category(string category)
+        public async Task<ActionResult<IEnumerable<ProductReadDto>>> Category(string category)
         {
             Console.WriteLine($"--> Get product by category {category}");
 
@@ -66,7 +115,23 @@ namespace Catalog.API.Controllers
                 return BadRequest();
             }
 
-            return Ok(product);
+            var productReadDtos = _mapper.Map<IEnumerable<ProductReadDto>>(product);
+
+           foreach(var productReadDto in productReadDtos)
+            {
+                try
+                {
+                    productReadDto.DiscountPrice = productReadDto.Price;
+                    var coupon = await _discountGrpcService.GetDiscount(productReadDto.Name);
+                    productReadDto.DiscountPrice -= coupon.Amount;
+                }
+                catch
+                {
+                    Console.WriteLine($"--> Not found discount for {productReadDto.Name}");
+                }
+            }
+
+            return Ok(productReadDtos);
         }
 
         [HttpPost]

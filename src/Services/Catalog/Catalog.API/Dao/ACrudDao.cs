@@ -74,9 +74,9 @@ namespace Catalog.API.Dao
             throw new NotImplementedException();
         }
 
-        public Task<T> GetSingleByCondition(Expression<Func<T, bool>> expression)
+        public async Task<T> GetSingleByCondition(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await _context.Set<T>().FirstOrDefaultAsync(expression);
         }
 
         public Task<bool> IsExist(Expression<Func<T, bool>> expression)

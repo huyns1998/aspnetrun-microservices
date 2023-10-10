@@ -1,5 +1,4 @@
 ﻿using Catalog.API.Entities;
-using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,6 +8,7 @@ namespace Catalog.API.BL
     {
         Task<IEnumerable<Product>> GetAll();
         Task<Product> GetById(int id);
+        Task<Product> GetByProductName(string productName);
         Task<IEnumerable<Product>> GetProductByCategory(string category);
         public Task<Product> Add(Product product);
         public Task<Product> Update(Product product);

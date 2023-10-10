@@ -1,8 +1,11 @@
 using Catalog.API.BL;
 using Catalog.API.Data;
+using Catalog.API.GrpcServices;
+using Catalog.API.Protos;
 using Catalog.API.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,6 +39,10 @@ namespace Catalog.API
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddScoped<IProductService, ProductService>();
+           
+            services.AddGrpcClient<DiscountProtoservice.DiscountProtoserviceClient>
+                (o => o.Address = new Uri(Configuration["GrpcSettings:DiscountUrl"]));
+            services.AddScoped<DiscountGrpcService>();
 
             services.AddControllers();
 

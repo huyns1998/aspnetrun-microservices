@@ -3,7 +3,7 @@
     {
       //Catalog
       "DownstreamPathTemplate": "/api/v1/catalog",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -12,11 +12,21 @@
       ],
       "UpstreamPathTemplate": "/catalog",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
-      "FileCacheOptions": { "TtlSeconds": 30 }
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "CatalogCache"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationproviderKey": "TestKey",
+        "AllowedScopes": [ "ocelot" ]
+      },
+      "RouteClaimsRequirement": {
+        "role": "Admin"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/v1/catalog/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
@@ -28,7 +38,7 @@
     },
     {
       "DownstreamPathTemplate": "/api/v1/catalog/{category}/category",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApp.Models;
@@ -6,6 +7,7 @@ using WebApp.Services;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly ICatalogService _catalogService;

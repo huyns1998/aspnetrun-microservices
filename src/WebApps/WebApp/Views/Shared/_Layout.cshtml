@@ -24,21 +24,33 @@
 
                 <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
                     <ul class="navbar-nav m-auto">
-                        <li id="home" class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li id="product" class="nav-item">
-                            <a class="nav-link" asp-controller="Product" asp-action="Index">Product</a>
-                        </li>
-                        <li id="cart" class="nav-item">
-                            <a class="nav-link" asp-controller="Cart" asp-action="Index">Cart</a>
-                        </li>
-                        <li id="order" class="nav-item">
-                            <a class="nav-link" asp-controller="Order" asp-action="Index">Order</a>
-                        </li>
-                        <li id="contact" class="nav-item">
-                            <a class="nav-link" asp-controller="Contact" asp-action="Index">Contact</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li id="home" class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li id="product" class="nav-item">
+                                <a class="nav-link" asp-controller="Product" asp-action="Index">Product</a>
+                            </li>
+                            <li id="cart" class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="Index">Cart</a>
+                            </li>
+                            <li id="order" class="nav-item">
+                                <a class="nav-link" asp-controller="Order" asp-action="Index">Order</a>
+                            </li>
+                            <li id="contact" class="nav-item">
+                                <a class="nav-link" asp-controller="Contact" asp-action="Index">Contact</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li id="userinfo" class="nav-item">
+                                    <a class="nav-link" asp-controller="Account" asp-action="UserInfo">See User Info</a>
+                                </li>
+                            }
+                            <li id="logout" class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>                           
+                        }
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0">
@@ -54,6 +66,14 @@
                             <i class="fa fa-shopping-cart"></i> Cart
                             <span class="badge badge-light">3</span>
                         </a>
+                       @* <ul class="navbar-nav m-auto">
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                <li id="contact" class="nav-item">
+                                    <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                                </li>
+                            }
+                        </ul>*@
                     </form>
                 </div>
             </div>
@@ -132,6 +152,7 @@
         $(document).ready(function () {
 
             var path = window.location.pathname.split('/')[1].toLocaleLowerCase();
+            debugger;
             switch (path) {
                 case "home":
                 case "": {
@@ -152,6 +173,10 @@
                 }
                 case "contact": {
                     $('#contact').addClass('active');
+                    break;
+                }
+                case "userinfo": {
+                    $('#userinfo').addClass('active');
                     break;
                 }
                 default: break;

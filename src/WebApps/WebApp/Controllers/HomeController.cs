@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,17 +16,15 @@ namespace WebApp.Controllers
     {
         private readonly ICatalogService _catalogService;
         private readonly IBasketService _basketService;
-
         public HomeController(ICatalogService catalogService, IBasketService basketService)
         {
             _catalogService = catalogService;
             _basketService = basketService;
         }
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             IEnumerable<CatalogModel> productList = await _catalogService.GetCatalog();
-
             return View(productList);
         }
 

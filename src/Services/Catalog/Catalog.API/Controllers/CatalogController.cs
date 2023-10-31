@@ -3,12 +3,9 @@ using Catalog.API.BL;
 using Catalog.API.Dtos;
 using Catalog.API.Entities;
 using Catalog.API.GrpcServices;
-using Catalog.API.Repositories;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,12 +23,13 @@ namespace Catalog.API.Controllers
         public CatalogController(IProductService productServive/*, ILogger<CatalogController> logger*/, IMapper mapper, DiscountGrpcService discountGrpcService)
         {
             _productService = productServive;
-            _mapper = mapper;   
+            _mapper = mapper;
             _discountGrpcService = discountGrpcService;
             //_logger = logger;
         }
 
         [HttpGet]
+        [Authorize(Policy = "ReadCatalogPolicy")]
         public async Task<ActionResult<IEnumerable<ProductReadDto>>> Get()
         {
             Console.WriteLine("--> Get all products");
@@ -40,7 +38,7 @@ namespace Catalog.API.Controllers
 
             var productReadDtos = _mapper.Map<IEnumerable<ProductReadDto>>(products);
 
-            foreach(var productReadDto in productReadDtos) 
+            foreach (var productReadDto in productReadDtos)
             {
                 try
                 {
@@ -117,7 +115,7 @@ namespace Catalog.API.Controllers
 
             var productReadDtos = _mapper.Map<IEnumerable<ProductReadDto>>(product);
 
-           foreach(var productReadDto in productReadDtos)
+            foreach (var productReadDto in productReadDtos)
             {
                 try
                 {
@@ -139,7 +137,7 @@ namespace Catalog.API.Controllers
         {
             Console.WriteLine($"--> Create product {productCreateDto.Name}");
 
-            Product product = _mapper.Map<Product>(productCreateDto);   
+            Product product = _mapper.Map<Product>(productCreateDto);
 
             var result = await _productService.Add(product);
             if (result != null)
@@ -150,7 +148,7 @@ namespace Catalog.API.Controllers
             else
             {
                 Console.WriteLine($"--> Create product {result.Name} fail");
-                return BadRequest();    
+                return BadRequest();
             }
         }
 
@@ -166,7 +164,7 @@ namespace Catalog.API.Controllers
                 return BadRequest();
             }
 
-            product.Name = productUpdateDto.Name;   
+            product.Name = productUpdateDto.Name;
             product.Summary = productUpdateDto.Summary;
             product.Category = productUpdateDto.Category;
             product.Description = productUpdateDto.Description;
@@ -175,12 +173,12 @@ namespace Catalog.API.Controllers
 
             var result = await _productService.Update(product);
 
-            if(result == null) 
+            if (result == null)
             {
-                return BadRequest(result);    
+                return BadRequest(result);
             }
 
-            return Ok(result);    
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

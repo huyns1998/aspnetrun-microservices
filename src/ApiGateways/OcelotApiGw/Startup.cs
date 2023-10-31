@@ -16,6 +16,15 @@ namespace OcelotApiGw
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var authenticationProviderKey = "TestKey";
+
+            services.AddAuthentication("Bearer")
+                    .AddIdentityServerAuthentication(authenticationProviderKey, opt =>
+                    {
+                        opt.ApiName = "ocelot";
+                        opt.Authority = "https://localhost:5015";
+                    });
+
             services.AddOcelot()
                 .AddKubernetes()
                 .AddCacheManager(settings => settings.WithDictionaryHandle());
